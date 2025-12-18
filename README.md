@@ -77,7 +77,6 @@ Body (JSON):
   "password": "haslo"
 }
 
-
 W odpowiedzi API zwróci token dostępu.
 
 ### 2️⃣ Autoryzacja kolejnych requestów
@@ -128,18 +127,4 @@ php artisan test tests/Unit/Books/TestBookStore.php
 
 ### 🧩 Architektura i uproszczenia
 
-Ze względu na to, że projekt powstawał jako **zadanie rekrutacyjne**, a także z uwagi na ograniczony czas realizacji,
-większość logiki aplikacji została umieszczona bezpośrednio w **kontrolerach**.
-
-W środowisku produkcyjnym naturalnym rozwinięciem byłoby rozbicie logiki na:
-- warstwę **Services**
-- ewentualnie **Action / UseCase classes**
-- oraz bardziej rozbudowane **Policies** i **DTO / Form Requests**
-
-Tutaj priorytetem było:
-- czytelne API
-- poprawne działanie relacji
-- walidacja danych
-- działająca autoryzacja i obsługa kolejek
-
-Zamiast nadmiernej architektury skupiono się na przejrzystości rozwiązania i spełnieniu wymagań zadania.
+Ze względu na to, że projekt powstawał jako **zadanie rekrutacyjne**, logika aplikacji została umieszczona bezpośrednio w **kontrolerach**.
