@@ -12,7 +12,7 @@ use App\Models\Book;
 
 class BookController extends Controller
 {
-    public function index(): JsonResponse 
+    public function index(): JsonResponse
     {
         try {
             $books = Book::with('authors')->paginate(200);
@@ -26,7 +26,7 @@ class BookController extends Controller
         }
     }
 
-    public function store(BookStoreRequest $request): JsonResponse 
+    public function store(BookStoreRequest $request): JsonResponse
     {
         try {
             $book = Book::create([
@@ -34,12 +34,24 @@ class BookController extends Controller
             ]);
 
             if ($request->has('author_id')) {
-                $book->authors()->attach($request->input('author_id'));
+                $book->authors()->sync($request->input('author_id'));
                 $book->load('authors');
                 StoreAuthorLastStoredBookTitle::dispatch(
                     $request->input('author_id'),
                     $request->input('title')
                 );
+            }
+
+            if ($request->has('author_ids')) {
+                $book->authors()->sync($request->input('author_ids'));
+                $book->load('authors');
+
+                foreach ($request->input('author_ids') as $author_id) {
+                    StoreAuthorLastStoredBookTitle::dispatch(
+                        $author_id,
+                        $request->input('title')
+                    );
+                }
             }
 
             return response()->json([
@@ -53,7 +65,7 @@ class BookController extends Controller
         }
     }
 
-    public function update(BookUpdateRequest $request, Book $book): JsonResponse 
+    public function update(BookUpdateRequest $request, Book $book): JsonResponse
     {
         try {
             $book->fill($request->only([
@@ -74,7 +86,7 @@ class BookController extends Controller
         }
     }
 
-    public function destroy(Book $book): JsonResponse 
+    public function destroy(Book $book): JsonResponse
     {
         try {
             $result = $book->delete();
